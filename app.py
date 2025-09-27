@@ -3,8 +3,9 @@ import sqlite3
 from flask import Flask, render_template, request, redirect, url_for, flash, g, abort
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'dev-secret-key'  # replace in production
-app.config['DATABASE'] = os.path.join(app.root_path, 'timeweave.db')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key')
+# Use /var/data/timeweave.db when a disk is attached (Render), else local file
+app.config['DATABASE'] = os.environ.get('DATABASE_PATH', os.path.join(app.root_path, 'timeweave.db'))
 
 
 def get_db():
@@ -127,8 +128,16 @@ def delete_entry(entry_id):
     return redirect(url_for("timetable"))
 
 
+# Health check endpoint for Render
+@app.get("/healthz")
+def healthz():
+    return "ok", 200
+
+
+# Ensure DB exists on import (works under Gunicorn/Render)
+with app.app_context():
+    init_db()
+
+
 if __name__ == "__main__":
-    # Initialize the database once at startup (Flask 3.x compatible)
-    with app.app_context():
-        init_db()
     app.run(debug=True)
