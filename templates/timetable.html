@@ -14,14 +14,9 @@
       <span class="text-xl tracking-wide font-extrabold">TIME-WEAVE</span>
     </a>
     <div class="hidden sm:flex items-center gap-6">
-        <a href="{{ url_for('index') }}" class="hover:text-white">
-        <ion-icon name="arrow-back-outline"></ion-icon>
-        Go Back
-      </a>
       <a href="{{ url_for('index') }}#quick-add" class="hover:text-white">
         <ion-icon class="inline" name="add-circle-outline"></ion-icon> Quick Add
       </a>
-      
     </div>
   </nav>
 
@@ -53,7 +48,6 @@
         <a href="{{ url_for('index') }}#quick-add" class="inline-flex items-center gap-2 rounded-xl bg-[#476EAE] text-white px-4 py-2 hover:bg-[#355c94] transition">
           <ion-icon name="add-outline"></ion-icon> Add Entry
         </a>
-        
       </div>
 
       <div class="overflow-x-auto">
@@ -66,6 +60,7 @@
               <th class="px-4 py-3">Course</th>
               <th class="px-4 py-3">Instructor</th>
               <th class="px-4 py-3">Room</th>
+              <th class="px-4 py-3">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -78,11 +73,23 @@
                 <td class="px-4 py-3 font-semibold text-[#355c94]">{{ e['course'] }}</td>
                 <td class="px-4 py-3">{{ e['instructor'] }}</td>
                 <td class="px-4 py-3">{{ e['room'] }}</td>
+                <td class="px-4 py-3">
+                    <div class="flex flex-wrap items-center gap-2">
+                    
+                        <form method="POST"
+                            action="{{ url_for('delete_entry', entry_id=e['id']) }}">
+                        <button type="submit"
+                                class="inline-flex items-center gap-1 rounded-lg bg-red-500 text-white px-3 py-1.5 text-sm hover:bg-red-600 transition">
+                            <ion-icon name="trash-outline"></ion-icon> Delete
+                        </button>
+                        </form>
+                    </div>
+                </td>
               </tr>
               {% endfor %}
             {% else %}
               <tr>
-                <td colspan="6" class="px-4 py-6 text-slate-500">
+                <td colspan="7" class="px-4 py-6 text-slate-500">
                   <div class="flex items-center gap-2">
                     <ion-icon name="information-circle-outline" class="text-xl"></ion-icon>
                     No entries yet. Use Quick Add to create your first class.
