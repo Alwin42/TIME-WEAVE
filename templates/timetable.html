@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your Timetable — TIME-WEAVE</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="theme-color" content="#476EAE">
+</head>
+<body class="min-h-screen bg-gradient-to-br from-[#A7E399] via-[#48B3AF] to-[#476EAE]">
+  <nav class="mx-auto max-w-7xl px-6 py-5 flex items-center justify-between text-white/90">
+    <a href="{{ url_for('index') }}" class="flex items-center gap-2">
+      <ion-icon name="time-outline" class="text-2xl"></ion-icon>
+      <span class="text-xl tracking-wide font-extrabold">TIME-WEAVE</span>
+    </a>
+    <div class="hidden sm:flex items-center gap-6">
+        <a href="{{ url_for('index') }}" class="hover:text-white">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+        Go Back
+      </a>
+      <a href="{{ url_for('index') }}#quick-add" class="hover:text-white">
+        <ion-icon class="inline" name="add-circle-outline"></ion-icon> Quick Add
+      </a>
+      
+    </div>
+  </nav>
+
+  <main class="mx-auto max-w-6xl px-6 pb-16">
+    <!-- Flash messages -->
+    <div class="mb-4">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="space-y-2">
+            {% for category, message in messages %}
+              <div class="rounded-xl px-4 py-3 text-sm flex items-center gap-2
+                          {% if category == 'success' %} bg-[#F6FF99] text-[#355c94]
+                          {% elif category == 'error' %} bg-red-100 text-red-700
+                          {% else %} bg-white/90 text-slate-700 {% endif %}">
+                <ion-icon name="{% if category == 'success' %}checkmark-circle-outline{% elif category == 'error' %}alert-circle-outline{% else %}information-circle-outline{% endif %}"></ion-icon>
+                <span>{{ message }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+    </div>
+
+    <div class="rounded-2xl bg-white/95 shadow-xl overflow-hidden">
+      <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between">
+        <h1 class="text-xl font-bold text-[#355c94] flex items-center gap-2">
+          <ion-icon name="grid-outline"></ion-icon> Your Timetable
+        </h1>
+        <a href="{{ url_for('index') }}#quick-add" class="inline-flex items-center gap-2 rounded-xl bg-[#476EAE] text-white px-4 py-2 hover:bg-[#355c94] transition">
+          <ion-icon name="add-outline"></ion-icon> Add Entry
+        </a>
+        
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left">
+          <thead>
+            <tr class="bg-[#A7E399]/40 text-[#355c94]">
+              <th class="px-4 py-3">Day</th>
+              <th class="px-4 py-3">Start</th>
+              <th class="px-4 py-3">End</th>
+              <th class="px-4 py-3">Course</th>
+              <th class="px-4 py-3">Instructor</th>
+              <th class="px-4 py-3">Room</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if entries %}
+              {% for e in entries %}
+              <tr class="border-t border-slate-100 hover:bg-[#F6FF99]/50">
+                <td class="px-4 py-3">{{ e['day'] }}</td>
+                <td class="px-4 py-3">{{ e['start_time'] }}</td>
+                <td class="px-4 py-3">{{ e['end_time'] }}</td>
+                <td class="px-4 py-3 font-semibold text-[#355c94]">{{ e['course'] }}</td>
+                <td class="px-4 py-3">{{ e['instructor'] }}</td>
+                <td class="px-4 py-3">{{ e['room'] }}</td>
+              </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="6" class="px-4 py-6 text-slate-500">
+                  <div class="flex items-center gap-2">
+                    <ion-icon name="information-circle-outline" class="text-xl"></ion-icon>
+                    No entries yet. Use Quick Add to create your first class.
+                  </div>
+                </td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- Ionicons -->
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

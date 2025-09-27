@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TIME-WEAVE — Timetable Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="theme-color" content="#476EAE">
+  
+</head>
+<body class="min-h-screen bg-gradient-to-br from-[#476EAE] via-[#48B3AF] to-[#A7E399] text-slate-800">
+  <!-- Nav -->
+  <nav class="mx-auto max-w-7xl px-6 py-5 flex items-center justify-between">
+    <a href="{{ url_for('index') }}" class="flex items-center gap-2 text-white/90">
+      <ion-icon name="time-outline" class="text-2xl"></ion-icon>
+      <span class="text-xl tracking-wide font-extrabold">TIME-WEAVE</span>
+    </a>
+    <div class="hidden sm:flex items-center gap-6">
+      <a href="#features" class="text-white/90 hover:text-white">Features</a>
+      <a href="{{ url_for('timetable') }}" class="text-white/90 hover:text-white">Timetable</a>
+      <a href="#quick-add" class="btn-ghost">Quick Add</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="mx-auto max-w-7xl px-6 py-10 sm:py-16">
+    <div class="grid lg:grid-cols-2 gap-8 items-center">
+      <div class="text-white/95">
+        <div class="chip mb-4">
+          <ion-icon name="sparkles-outline"></ion-icon> Smart Scheduling
+        </div>
+        <h1 class="text-4xl sm:text-5xl font-extrabold leading-tight drop-shadow-md">
+          Weave your perfect weekly schedule with TIME-WEAVE
+        </h1>
+        <p class="mt-4 text-white/90 text-lg">
+          Plan classes, avoid conflicts, and keep everything in sync. Fast, simple, and colorful.
+        </p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a href="{{ url_for('timetable') }}" class="btn-primary">
+            <ion-icon name="calendar-outline"></ion-icon> View Timetable
+          </a>
+          <a href="#quick-add" class="btn-ghost">
+            <ion-icon name="add-circle-outline"></ion-icon> Quick Add
+          </a>
+        </div>
+      </div>
+
+      <div class="relative">
+        <div class="rounded-2xl bg-white/90 shadow-xl p-6 sm:p-8 backdrop-blur">
+          <div class="flex items-center gap-2 mb-4">
+            <ion-icon name="calendar-number-outline" class="text-2xl text-[#476EAE]"></ion-icon>
+            <h2 class="text-xl font-bold text-[#355c94]">Conflict-free planning</h2>
+          </div>
+          <ul class="space-y-3 text-[#355c94]">
+            <li class="flex items-start gap-3">
+              <ion-icon name="checkmark-circle-outline" class="text-[#48B3AF] text-xl mt-0.5"></ion-icon>
+              Auto structure your week by day and time.
+            </li>
+            <li class="flex items-start gap-3">
+              <ion-icon name="checkmark-circle-outline" class="text-[#48B3AF] text-xl mt-0.5"></ion-icon>
+              Simple, fast data entry with meaningful icons on every field.
+            </li>
+            <li class="flex items-start gap-3">
+              <ion-icon name="checkmark-circle-outline" class="text-[#48B3AF] text-xl mt-0.5"></ion-icon>
+              Developed by TEAM-4.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Flash messages -->
+  <div class="mx-auto max-w-3xl px-6 -mt-6">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="space-y-2">
+          {% for category, message in messages %}
+            <div class="rounded-xl px-4 py-3 text-sm flex items-center gap-2
+                        {% if category == 'success' %} bg-[#A7E399] text-[#355c94]
+                        {% elif category == 'error' %} bg-red-100 text-red-700
+                        {% else %} bg-white/90 text-slate-700 {% endif %}">
+              <ion-icon name="{% if category == 'success' %}checkmark-circle-outline{% elif category == 'error' %}alert-circle-outline{% else %}information-circle-outline{% endif %}"></ion-icon>
+              <span>{{ message }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  <!-- Quick Add Form -->
+  <section id="quick-add" class="mx-auto max-w-5xl px-6 py-10">
+    <div class="rounded-2xl bg-white/95 shadow-xl p-6 sm:p-8">
+      <div class="flex items-center gap-2 mb-6">
+        <ion-icon name="add-circle-outline" class="text-2xl text-[#476EAE]"></ion-icon>
+        <h3 class="text-2xl font-bold text-[#355c94]">Quick Add to Timetable</h3>
+      </div>
+
+      <form method="POST" action="{{ url_for('quick_add') }}" class="grid md:grid-cols-2 gap-5">
+        <!-- Course -->
+        <div class="relative">
+          <ion-icon class="icon-left text-xl" name="book-outline"></ion-icon>
+          <input class="input" type="text" name="course" placeholder="Course name" required>
+        </div>
+
+        <!-- Instructor -->
+        <div class="relative">
+          <ion-icon class="icon-left text-xl" name="person-outline"></ion-icon>
+          <input class="input" type="text" name="instructor" placeholder="Instructor" required>
+        </div>
+
+        <!-- Room -->
+        <div class="relative">
+          <ion-icon class="icon-left text-xl" name="business-outline"></ion-icon>
+          <input class="input" type="text" name="room" placeholder="Room (e.g., B201)" required>
+        </div>
+
+        <!-- Day -->
+        <div class="relative">
+          <ion-icon class="icon-left text-xl" name="calendar-outline"></ion-icon>
+          <select name="day" class="input appearance-none pr-10" required>
+            <option value="" disabled selected>Select a day</option>
+            <option>Monday</option>
+            <option>Tuesday</option>
+            <option>Wednesday</option>
+            <option>Thursday</option>
+            <option>Friday</option>
+            <option>Saturday</option>
+            <option>Sunday</option>
+          </select>
+          <ion-icon name="chevron-down-outline" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></ion-icon>
+        </div>
+
+        <!-- Start Time -->
+        <div class="relative">
+          <ion-icon class="icon-left text-xl" name="time-outline"></ion-icon>
+          <input class="input" type="time" name="start_time" required>
+        </div>
+
+        <!-- End Time -->
+        <div class="relative">
+          <ion-icon class="icon-left text-xl" name="time-outline"></ion-icon>
+          <input class="input" type="time" name="end_time" required>
+        </div>
+
+        <div class="md:col-span-2 flex flex-wrap gap-3 justify-end">
+          <button type="submit" class="btn-primary">
+            <ion-icon name="save-outline"></ion-icon> Add Entry
+          </button>
+          <a href="{{ url_for('timetable') }}" class="btn-ghost">
+            <ion-icon name="grid-outline"></ion-icon> View Timetable
+          </a>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="mx-auto max-w-7xl px-6 pb-16">
+    <h3 class="text-white text-2xl font-bold mb-6 flex items-center gap-2">
+      <ion-icon name="rocket-outline"></ion-icon> Why TIME-WEAVE?
+    </h3>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="rounded-2xl bg-white/95 p-6 shadow-lg">
+        <ion-icon name="sparkles-outline" class="text-3xl text-[#476EAE]"></ion-icon>
+        <h4 class="mt-3 font-semibold text-[#355c94]">Elegant UI</h4>
+        <p class="text-slate-600">A clean, responsive layout with a refreshing blue-teal-lime palette.</p>
+      </div>
+      <div class="rounded-2xl bg-white/95 p-6 shadow-lg">
+        <ion-icon name="sync-outline" class="text-3xl text-[#48B3AF]"></ion-icon>
+        <h4 class="mt-3 font-semibold text-[#355c94]">Fast Input</h4>
+        <p class="text-slate-600">Icon-guided fields help you create entries in seconds.</p>
+      </div>
+      <div class="rounded-2xl bg-white/95 p-6 shadow-lg">
+        <ion-icon name="file-tray-stacked-outline" class="text-3xl text-[#A7E399]"></ion-icon>
+        <h4 class="mt-3 font-semibold text-[#355c94]">Local & Portable</h4>
+        <p class="text-slate-600">Your data lives in SQLite — easy to backup or migrate.</p>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Footer -->
+  <footer class="bg-[#355c94]/20 border-t border-white/20">
+    <div class="mx-auto max-w-7xl px-6 py-6 text-white/90 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <p class="text-sm">© {{ 2025 if false else "" }} TIME-WEAVE. Crafted for smooth timetable management.</p>
+      <div class="flex items-center gap-3">
+        
+      </div>
+    </div>
+  </footer>
+
+  <!-- Ionicons -->
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
